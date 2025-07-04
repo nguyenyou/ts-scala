@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "test": "npm run generate-result && vitest --run && npm run test:scala",
     "test:scala": "scala-cli compile -S 3.7.1 src/test-fixtures/conversion-result.scala",
-    "compile-result-js": "npm run generate-result-js && scala-cli --power package --js result-js.scala -o result.js -f && node result.js",
+    "test:scala-js": "npm run generate-result-js && scala-cli --power package --js result-js.scala -o result.js -f && node result.js",
     "generate-result": "npx tsx scripts/generate-result.ts",
     "generate-result-js": "npx tsx scripts/generate-result-js.ts"
   },
