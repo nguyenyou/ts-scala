@@ -1,0 +1,24 @@
+name: Test
+
+on:
+  workflow_dispatch:
+  
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: coursier/cache-action@v6.4
+      - uses: VirtusLab/scala-cli-setup@v1.5
+      - uses: actions/setup-node@v4
+        with:
+            node-version: 23
+            cache: 'npm'
+      - run: npm install
+      - run: npm run test

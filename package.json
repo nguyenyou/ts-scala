@@ -6,9 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest --run"
+    "test": "npm run generate-result && vitest --run && npm run test:scala",
+    "test:scala": "scala-cli compile -S 3.7.1 src/test-fixtures/conversion-result.scala",
+    "generate-result": "npx tsx scripts/generate-result.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
@@ -35,19 +36,14 @@
     "zod": "^3.25.73"
   },
   "devDependencies": {
-    "@eslint/js": "^9.30.1",
     "@types/node": "24.0.10",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.6.0",
-    "eslint": "^9.30.1",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.3.0",
     "jsdom": "^26.1.0",
     "tw-animate-css": "^1.3.5",
     "typescript": "~5.8.3",
-    "typescript-eslint": "^8.35.1",
     "vite": "^7.0.2",
     "vitest": "^3.2.4"
   }

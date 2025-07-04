@@ -13,20 +13,64 @@ import { Badge } from '@/components/ui/badge'
 import { FileText, Code2, Copy, RotateCcw, Zap } from 'lucide-react'
 
 function App() {
-  const [source, setSource] = useState<string>(`interface User {
+  const [source, setSource] = useState<string>(`// TypeScript Type Definitions
+interface User {
   id: number;
   name: string;
-  email: string;
+  email?: string;
   isActive: boolean;
+  roles: UserRole[];
 }
 
-type UserRole = 'admin' | 'user' | 'guest';
+interface Admin extends User {
+  permissions: Permission[];
+  lastLogin?: Date;
+}
 
-interface ApiResponse<T> {
-  data: T;
+type UserRole = 'admin' | 'moderator' | 'user';
+
+type Permission = 'read' | 'write' | 'delete';
+
+interface Repository<T> {
+  findById: (id: number) => T | null;
+  save: (entity: T) => T;
+  findAll: () => T[];
+  update: (id: number, data: Partial<T>) => T;
+}
+
+interface ApiResponse<TData> {
+  data: TData;
   success: boolean;
   message?: string;
-}`)
+  timestamp: Date;
+}
+
+type EventHandler<T> = (event: T) => void;
+
+interface EventEmitter {
+  on: <T>(event: string, handler: EventHandler<T>) => void;
+  emit: <T>(event: string, data: T) => boolean;
+}
+
+enum Status {
+  Active = 'active',
+  Inactive = 'inactive',
+  Pending = 'pending'
+}
+
+// Tuple types
+interface Coordinates {
+  position: [number, number];
+  colors: [string, string, string];
+}
+
+// Intersection types
+type Timestamped = {
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+type UserWithTimestamp = User & Timestamped;`)
 
   const scalaCode = useMemo(() => convertTsToScala(source), [source])
 
@@ -39,20 +83,64 @@ interface ApiResponse<T> {
   }
 
   const resetToExample = () => {
-    setSource(`interface User {
+    setSource(`// TypeScript Type Definitions
+interface User {
   id: number;
   name: string;
-  email: string;
+  email?: string;
   isActive: boolean;
+  roles: UserRole[];
 }
 
-type UserRole = 'admin' | 'user' | 'guest';
+interface Admin extends User {
+  permissions: Permission[];
+  lastLogin?: Date;
+}
 
-interface ApiResponse<T> {
-  data: T;
+type UserRole = 'admin' | 'moderator' | 'user';
+
+type Permission = 'read' | 'write' | 'delete';
+
+interface Repository<T> {
+  findById: (id: number) => T | null;
+  save: (entity: T) => T;
+  findAll: () => T[];
+  update: (id: number, data: Partial<T>) => T;
+}
+
+interface ApiResponse<TData> {
+  data: TData;
   success: boolean;
   message?: string;
-}`)
+  timestamp: Date;
+}
+
+type EventHandler<T> = (event: T) => void;
+
+interface EventEmitter {
+  on: <T>(event: string, handler: EventHandler<T>) => void;
+  emit: <T>(event: string, data: T) => boolean;
+}
+
+enum Status {
+  Active = 'active',
+  Inactive = 'inactive',
+  Pending = 'pending'
+}
+
+// Tuple types
+interface Coordinates {
+  position: [number, number];
+  colors: [string, string, string];
+}
+
+// Intersection types
+type Timestamped = {
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+type UserWithTimestamp = User & Timestamped;`)
   }
 
   return (
