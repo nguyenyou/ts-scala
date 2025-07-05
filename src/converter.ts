@@ -51,7 +51,7 @@ export function convertTsToScala(tsSource: string): string {
     const propertyName = property.name?.getText()
     const propertyType = convertType(property.type)
     
-    writer.write(`${propertyName}: ${propertyType}`)
+    writer.write(`val ${propertyName}: ${propertyType}`)
   }
   
   function convertType(typeNode: ts.TypeNode | undefined): string {
