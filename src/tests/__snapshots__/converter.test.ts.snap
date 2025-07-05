@@ -1,0 +1,13 @@
+// Bun Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`interface conversion 1`] = `
+"trait Person:
+  val name: String
+  val age: Int"
+`;
+
+exports[`interface conversion simple interface 1`] = `
+"trait Person:
+  val name: String
+  val age: Int"
+`;

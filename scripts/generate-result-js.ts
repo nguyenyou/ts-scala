@@ -11,7 +11,7 @@ const __dirname = path.dirname(__filename);
 async function generateResultJS() {
   try {
     // Read the input TypeScript file
-    const inputPath = path.join(__dirname, '..', 'src', 'test-fixtures', 'input.d.ts');
+    const inputPath = path.join(__dirname, '..', 'src', 'tests', 'test-fixtures', 'input.d.ts');
     const outputPath = path.join(__dirname, '..', 'result-js.scala');
     
     const tsInput = fs.readFileSync(inputPath, 'utf-8');

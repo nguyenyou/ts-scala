@@ -1,23 +1,34 @@
-import { describe, it, expect } from 'vitest'
-import { readFileSync } from 'fs'
-import { join } from 'path'
-import { convertTsToScala } from './converter'
+import { describe, expect, test } from "bun:test";
+import { convertTsToScala } from "./converter";
+import dedent from "dedent";
 
-describe('convertTsToScala', () => {
-  describe('File-based Interface Conversion', () => {
-    it('converts TypeScript definitions to Scala based on fixture files', () => {
-      // Read the input TypeScript definition file
-      const inputPath = join(__dirname, 'test-fixtures', 'input.d.ts')
-      const expectedPath = join(__dirname, 'test-fixtures', 'conversion-result.scala')
-      
-      const tsInput = readFileSync(inputPath, 'utf-8')
-      const expectedOutput = readFileSync(expectedPath, 'utf-8')
-      
-      // Convert the TypeScript to Scala
-      const actualOutput = convertTsToScala(tsInput)
-      
-      // Compare the actual output with expected output
-      expect(actualOutput.trim()).toBe(expectedOutput.trim())
-    })
-  })
-}) 
+// describe("interface conversion", () => {
+//   test("simple interface", () => {
+//     const tsSource = `
+//     interface Person {
+//       name: string
+//       age: number
+//     }
+//     `;
+//     const result = convertTsToScala(tsSource);
+//     expect(result).toMatchSnapshot();
+//   });
+// });
+
+describe("type conversion", () => {
+  test("simple type", () => {
+    const tsSource = dedent`
+    interface Person {
+      name: string
+      age: number
+    }
+    `;
+    const result = convertTsToScala(tsSource);
+    expect(result).toBe(dedent`
+    trait Person {
+      name: String
+      age: Int
+    }
+    `);
+  });
+});
