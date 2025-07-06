@@ -68,7 +68,33 @@ export function parseToIR(
     return trait;
   };
 
-  const convertTypeAlias = (node: ts.TypeAliasDeclaration): ScalaTypeAlias => {
+  const convertTypeAlias = (node: ts.TypeAliasDeclaration): Declaration => {
+    // If the alias is for an inline object type (a TypeLiteral), model it as a separate trait
+    // so that the resulting Scala mirrors an interface-style definition. This also ensures
+    // we preserve member information instead of collapsing it into `Any`.
+    if (ts.isTypeLiteralNode(node.type)) {
+      const trait: ScalaTrait = {
+        kind: 'trait',
+        name: node.name.getText(),
+        members: [],
+      };
+
+      node.type.members.forEach((member) => {
+        if (ts.isPropertySignature(member)) {
+          const val = convertPropertySignature(member);
+          trait.members.push(val);
+        } else {
+          diagnostics.push({
+            message: `Unsupported member in type literal alias ${trait.name}`,
+            start: member.getStart(),
+            end: member.getEnd(),
+          });
+        }
+      });
+      return trait;
+    }
+
+    // Fallback: keep as a simple type alias
     const alias: ScalaTypeAlias = {
       kind: 'typeAlias',
       name: node.name.getText(),
