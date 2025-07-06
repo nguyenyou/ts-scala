@@ -1,20 +1,26 @@
-import { useState, useMemo } from 'react'
-import { convertTsToScala } from './converter'
+import { useState, useMemo } from "react";
+import { convertTsToScala } from "./converter";
 
 // ShadCN UI / Radix based primitives
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable'
-import { Textarea } from '@/components/ui/textarea'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import {
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from "@/components/ui/resizable";
+import { Textarea } from "@/components/ui/textarea";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { CodeViewer } from "./components/CodeViewer";
+import { Code } from 'codice'
 
 // Lucide icons
-import { FileText, Code2, Copy, RotateCcw, Zap } from 'lucide-react'
+import { FileText, Code2, Copy, RotateCcw, Zap } from "lucide-react";
+import { CodeEditor } from "./components/CodeEditor";
 
 function App() {
-  const [source, setSource] = useState<string>(`// TypeScript Type Definitions
-interface Person {
+  const [source, setSource] = useState<string>(`interface Person {
   name: string;
   age: number;
 }
@@ -26,17 +32,17 @@ type AnotherPerson = {
 
 type Color = "red" | "green" | "blue";
 
-type Age = number | string;`)
+type Age = number | string;`);
 
-  const scalaCode = useMemo(() => convertTsToScala(source), [source])
+  const scalaCode = useMemo(() => convertTsToScala(source), [source]);
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(scalaCode)
+      await navigator.clipboard.writeText(scalaCode);
     } catch (err) {
-      console.error('Failed to copy:', err)
+      console.error("Failed to copy:", err);
     }
-  }
+  };
 
   const resetToExample = () => {
     setSource(`// TypeScript Type Definitions
@@ -96,8 +102,8 @@ type Timestamped = {
   updatedAt: Date;
 };
 
-type UserWithTimestamp = User & Timestamped;`)
-  }
+type UserWithTimestamp = User & Timestamped;`);
+  };
 
   return (
     <div className="h-screen w-screen bg-gradient-to-br from-background via-background to-muted/20 flex flex-col">
@@ -111,8 +117,12 @@ type UserWithTimestamp = User & Timestamped;`)
                   <Zap className="size-6 text-primary" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold tracking-tight">TS → Scala</h1>
-                  <p className="text-sm text-muted-foreground">TypeScript to Scala 3 Converter</p>
+                  <h1 className="text-2xl font-bold tracking-tight">
+                    TS → Scala
+                  </h1>
+                  <p className="text-sm text-muted-foreground">
+                    TypeScript to Scala 3 Converter
+                  </p>
                 </div>
               </div>
             </div>
@@ -128,7 +138,10 @@ type UserWithTimestamp = User & Timestamped;`)
 
       {/* Main Content */}
       <div className="flex-1 container mx-auto px-6 py-6">
-        <ResizablePanelGroup direction="horizontal" className="h-full rounded-lg border bg-background shadow-sm">
+        <ResizablePanelGroup
+          direction="horizontal"
+          className="h-full rounded-lg border bg-background shadow-sm"
+        >
           {/* Input Panel */}
           <ResizablePanel defaultSize={50} minSize={30}>
             <Card className="h-full rounded-none border-0 shadow-none">
@@ -153,13 +166,15 @@ type UserWithTimestamp = User & Timestamped;`)
                     Reset Example
                   </Button>
                 </div>
-                <Textarea
-                  value={source}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setSource(e.target.value)}
-                  placeholder="Enter your TypeScript interface or type definitions here..."
-                  spellCheck={false}
-                  className="flex-1 font-mono text-sm resize-none border-0 shadow-none bg-muted/30 focus-visible:bg-background transition-colors"
-                />
+                <div className="flex-1">
+                  <CodeEditor
+                    content={source}
+                    onSaveContent={(updatedContent, _) => {
+                      setSource(updatedContent);
+                    }}
+                    language="javascript"
+                  />
+                </div>
               </CardContent>
             </Card>
           </ResizablePanel>
@@ -190,22 +205,16 @@ type UserWithTimestamp = User & Timestamped;`)
                     Copy Code
                   </Button>
                 </div>
-                <ScrollArea className="flex-1 rounded-md border bg-muted/30 p-4">
-                  <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-foreground">
-                    {scalaCode || (
-                      <span className="text-muted-foreground italic">
-                        Enter TypeScript code to see the Scala conversion...
-                      </span>
-                    )}
-                  </pre>
-                </ScrollArea>
+                <div className="flex-1">
+                  <CodeViewer code={scalaCode} />
+                </div>
               </CardContent>
             </Card>
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
