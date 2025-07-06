@@ -3,7 +3,7 @@ trait Person {
   val age: Double
 }
 
-trait Person {
+trait AnotherPerson {
   val name: String
   val age: Double
 }

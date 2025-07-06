@@ -14,63 +14,19 @@ import { FileText, Code2, Copy, RotateCcw, Zap } from 'lucide-react'
 
 function App() {
   const [source, setSource] = useState<string>(`// TypeScript Type Definitions
-interface User {
-  id: number;
+interface Person {
   name: string;
-  email?: string;
-  isActive: boolean;
-  roles: UserRole[];
+  age: number;
 }
 
-interface Admin extends User {
-  permissions: Permission[];
-  lastLogin?: Date;
+type AnotherPerson = {
+  name: string;
+  age: number;
 }
 
-type UserRole = 'admin' | 'moderator' | 'user';
+type Color = "red" | "green" | "blue";
 
-type Permission = 'read' | 'write' | 'delete';
-
-interface Repository<T> {
-  findById: (id: number) => T | null;
-  save: (entity: T) => T;
-  findAll: () => T[];
-  update: (id: number, data: Partial<T>) => T;
-}
-
-interface ApiResponse<TData> {
-  data: TData;
-  success: boolean;
-  message?: string;
-  timestamp: Date;
-}
-
-type EventHandler<T> = (event: T) => void;
-
-interface EventEmitter {
-  on: <T>(event: string, handler: EventHandler<T>) => void;
-  emit: <T>(event: string, data: T) => boolean;
-}
-
-enum Status {
-  Active = 'active',
-  Inactive = 'inactive',
-  Pending = 'pending'
-}
-
-// Tuple types
-interface Coordinates {
-  position: [number, number];
-  colors: [string, string, string];
-}
-
-// Intersection types
-type Timestamped = {
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-type UserWithTimestamp = User & Timestamped;`)
+type Age = number | string;`)
 
   const scalaCode = useMemo(() => convertTsToScala(source), [source])
 

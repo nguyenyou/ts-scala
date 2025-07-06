@@ -3,7 +3,7 @@ interface Person {
   age: number;
 }
 
-type Person = {
+type AnotherPerson = {
   name: string;
   age: number;
 }
