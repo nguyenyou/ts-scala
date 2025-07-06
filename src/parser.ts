@@ -29,7 +29,7 @@ export function parseToIR(
   // Primitive TypeScript -> Scala mapping table.
   const primitiveTypeMap: Partial<Record<ts.SyntaxKind, string>> = {
     [ts.SyntaxKind.StringKeyword]: 'String',
-    [ts.SyntaxKind.NumberKeyword]: 'Int',
+    [ts.SyntaxKind.NumberKeyword]: 'Double',
     [ts.SyntaxKind.BooleanKeyword]: 'Boolean',
   } as const;
 
