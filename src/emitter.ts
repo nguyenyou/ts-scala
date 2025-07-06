@@ -1,15 +1,21 @@
 import CodeBlockWriter from 'code-block-writer';
-import type { Declaration, ScalaTrait, ValMember } from './ir';
+import type { Declaration, ScalaTrait, ScalaTypeAlias, ValMember } from './ir';
 
 export function emitScala(declarations: Declaration[]): string {
   const writer = new CodeBlockWriter({ indentNumberOfSpaces: 2 });
 
   declarations.forEach((decl, declIndex) => {
-    if (decl.kind === 'trait') {
-      emitTrait(writer, decl);
-      if (declIndex < declarations.length - 1) {
-        writer.blankLine();
-      }
+    switch (decl.kind) {
+      case 'trait':
+        emitTrait(writer, decl);
+        break;
+      case 'typeAlias':
+        emitTypeAlias(writer, decl);
+        break;
+    }
+
+    if (declIndex < declarations.length - 1) {
+      writer.blankLine();
     }
   });
 
@@ -31,4 +37,8 @@ function emitTrait(writer: CodeBlockWriter, traitDecl: ScalaTrait): void {
 
 function emitVal(writer: CodeBlockWriter, member: ValMember): void {
   writer.write(`val ${member.name}: ${member.type}`);
+}
+
+function emitTypeAlias(writer: CodeBlockWriter, alias: ScalaTypeAlias): void {
+  writer.write(`type ${alias.name} = ${alias.type}`);
 } 

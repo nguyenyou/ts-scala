@@ -1,5 +1,5 @@
 import * as ts from 'typescript';
-import type { Declaration, ScalaTrait, ValMember, Diagnostic } from './ir';
+import type { Declaration, ScalaTrait, ScalaTypeAlias, ValMember, Diagnostic } from './ir';
 
 /**
  * Convert a TypeScript source string into an intermediate representation
@@ -38,6 +38,10 @@ export function parseToIR(
       declarations.push(convertInterface(node));
       return; // do not traverse children further, we already handled them
     }
+    if (ts.isTypeAliasDeclaration(node)) {
+      declarations.push(convertTypeAlias(node));
+      return;
+    }
     ts.forEachChild(node, visit);
   };
 
@@ -64,6 +68,15 @@ export function parseToIR(
     return trait;
   };
 
+  const convertTypeAlias = (node: ts.TypeAliasDeclaration): ScalaTypeAlias => {
+    const alias: ScalaTypeAlias = {
+      kind: 'typeAlias',
+      name: node.name.getText(),
+      type: convertType(node.type),
+    };
+    return alias;
+  };
+
   const convertPropertySignature = (
     property: ts.PropertySignature
   ): ValMember => {
@@ -79,6 +92,28 @@ export function parseToIR(
 
   const convertType = (typeNode: ts.TypeNode | undefined): string => {
     if (!typeNode) return 'Any';
+
+    // Handle union types recursively.
+    if (ts.isUnionTypeNode(typeNode)) {
+      return typeNode.types.map(convertType).join(' | ');
+    }
+
+    // Handle literal types like string literals.
+    if (ts.isLiteralTypeNode(typeNode)) {
+      const lit = typeNode.literal;
+      if (ts.isStringLiteral(lit)) {
+        return `"${lit.text}"`;
+      }
+      if (ts.isNumericLiteral(lit)) {
+        return lit.text;
+      }
+    }
+
+    // Handle type references (aliases, interfaces, etc.)
+    if (ts.isTypeReferenceNode(typeNode)) {
+      return typeNode.getText();
+    }
+
     const mapped = primitiveTypeMap[typeNode.kind as ts.SyntaxKind];
     if (mapped) return mapped;
 

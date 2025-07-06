@@ -1,4 +1,4 @@
-export type Declaration = ScalaTrait;
+export type Declaration = ScalaTrait | ScalaTypeAlias;
 
 export interface ScalaTrait {
   kind: 'trait';
@@ -18,4 +18,11 @@ export interface Diagnostic {
   message: string;
   start: number;
   end: number;
+}
+
+// New IR node for Scala type alias
+export interface ScalaTypeAlias {
+  kind: 'typeAlias';
+  name: string;
+  type: string;
 } 
