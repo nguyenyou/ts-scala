@@ -11,3 +11,8 @@ type AnotherPerson = {
 type Color = "red" | "green" | "blue";
 
 type Age = number | string;
+
+type ButtonProps = {
+  label: string;
+  color: Color;
+}

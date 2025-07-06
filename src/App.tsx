@@ -1,26 +1,22 @@
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { convertTsToScala } from "./converter";
 
 // ShadCN UI / Radix based primitives
-import {
-  ResizablePanelGroup,
-  ResizablePanel,
-  ResizableHandle,
-} from "@/components/ui/resizable";
-import { Textarea } from "@/components/ui/textarea";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
 import { CodeViewer } from "./components/CodeViewer";
-import { Code } from 'codice'
 
 // Lucide icons
-import { FileText, Code2, Copy, RotateCcw, Zap } from "lucide-react";
+import { Code2, Copy, FileText, RotateCcw, Zap } from "lucide-react";
 import { CodeEditor } from "./components/CodeEditor";
 
-function App() {
-  const [source, setSource] = useState<string>(`interface Person {
+const example = `interface Person {
   name: string;
   age: number;
 }
@@ -32,7 +28,16 @@ type AnotherPerson = {
 
 type Color = "red" | "green" | "blue";
 
-type Age = number | string;`);
+type Age = number | string;
+
+type ButtonProps = {
+  label: string;
+  color: Color;
+}`
+
+function App() {
+  const [source, setSource] = useState<string>(example);
+
 
   const scalaCode = useMemo(() => convertTsToScala(source), [source]);
 
@@ -45,64 +50,7 @@ type Age = number | string;`);
   };
 
   const resetToExample = () => {
-    setSource(`// TypeScript Type Definitions
-interface User {
-  id: number;
-  name: string;
-  email?: string;
-  isActive: boolean;
-  roles: UserRole[];
-}
-
-interface Admin extends User {
-  permissions: Permission[];
-  lastLogin?: Date;
-}
-
-type UserRole = 'admin' | 'moderator' | 'user';
-
-type Permission = 'read' | 'write' | 'delete';
-
-interface Repository<T> {
-  findById: (id: number) => T | null;
-  save: (entity: T) => T;
-  findAll: () => T[];
-  update: (id: number, data: Partial<T>) => T;
-}
-
-interface ApiResponse<TData> {
-  data: TData;
-  success: boolean;
-  message?: string;
-  timestamp: Date;
-}
-
-type EventHandler<T> = (event: T) => void;
-
-interface EventEmitter {
-  on: <T>(event: string, handler: EventHandler<T>) => void;
-  emit: <T>(event: string, data: T) => boolean;
-}
-
-enum Status {
-  Active = 'active',
-  Inactive = 'inactive',
-  Pending = 'pending'
-}
-
-// Tuple types
-interface Coordinates {
-  position: [number, number];
-  colors: [string, string, string];
-}
-
-// Intersection types
-type Timestamped = {
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-type UserWithTimestamp = User & Timestamped;`);
+    setSource(example);
   };
 
   return (
@@ -166,7 +114,7 @@ type UserWithTimestamp = User & Timestamped;`);
                     Reset Example
                   </Button>
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 !cursor-text">
                   <CodeEditor
                     content={source}
                     onSaveContent={(updatedContent, _) => {

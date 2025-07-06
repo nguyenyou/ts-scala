@@ -11,3 +11,8 @@ trait AnotherPerson {
 type Color = "red" | "green" | "blue"
 
 type Age = Double | String
+
+trait ButtonProps {
+  val label: String
+  val color: Color
+}
